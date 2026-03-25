@@ -75,7 +75,7 @@ project             = coalesce(var.project, data.google_project.project.project_
   }
 
   lifecycle {
-    ignore_changes = [settings, settings.maintenance_window]
+    ignore_changes = [settings]
   }
 }
 
