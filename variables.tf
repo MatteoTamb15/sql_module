@@ -112,8 +112,8 @@ variable "settings" {
   description = "Settings for the Cloud SQL instance."
   type = object({
     tier                            = string
-    edition                         = optional(string)
-    user_labels                     = optional(map(string))
+    edition                         = optional(string, null)
+    user_labels                     = optional(map(string),{})
     auto_upgrade_enabled            = optional(bool)
     activation_policy               = optional(string)
     availability_type               = optional(string)
@@ -130,7 +130,7 @@ variable "settings" {
     data_disk_provisioned_iops      = optional(number)
     data_disk_provisioned_throughput= optional(number)
     node_count                      = optional(number)
-    pricing_plan                    = optional(string)
+    pricing_plan                    = optional(string, "PER_USE")
     time_zone                       = optional(string)
     retain_backups_on_delete        = optional(bool)
 
