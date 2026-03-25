@@ -1,21 +1,17 @@
-#############################
-#  Variabili principali
-#############################
-
 variable "name" {
-  description = "Name of the Cloud SQL instance. If null, Terraform generates a random name."
+  description = "Nome del Cloud SQL instance. Se null, Terraform genera un nome randomico."
   type        = string
   default     = null
 }
 
 variable "project" {
-  description = "Project ID for the Cloud SQL instance."
+  description = "Project ID per Cloud SQL instance."
   type        = string
   default     = null
 }
 
 variable "region" {
-  description = "Region where the SQL instance will run."
+  description = "Regione dove viene eseguita l'instanza SQL."
   type        = string
   default     = null
 }
@@ -26,7 +22,7 @@ variable "database_version" {
 }
 
 variable "deletion_protection" {
-  description = "Prevents Terraform from accidentally destroying the instance."
+  description = "Previene che Terraform distrugge accidentalmente l'istanza."
   type        = bool
   default     = false
 }
@@ -109,7 +105,7 @@ variable "database_flags" {
 }
 
 variable "settings" {
-  description = "Settings for the Cloud SQL instance."
+  description = "impostazioni per Cloud SQL instance."
   type = object({
     tier                            = string
     edition                         = optional(string)
@@ -146,27 +142,22 @@ variable "settings" {
       name  = string
       value = string
     })))
-
     active_directory_config = optional(object({
       domain = string
     }))
-
     data_cache_config = optional(object({
       data_cache_enabled = optional(bool)
     }))
-
     deny_maintenance_period = optional(list(object({
       start_date = string
       end_date   = string
       time       = string
     })))
-
     sql_server_audit_config = optional(object({
       bucket             = optional(string)
       upload_interval    = optional(string)
       retention_interval = optional(string)
     }))
-
     backup_configuration = optional(object({
       binary_log_enabled               = optional(bool)
       enabled                          = optional(bool)
@@ -180,7 +171,6 @@ variable "settings" {
         retention_unit   = optional(string)
       }))
     }))
-
     ip_configuration = optional(object({
       ipv4_enabled                           = optional(bool)
       private_network                        = optional(string)
@@ -190,7 +180,6 @@ variable "settings" {
       custom_subject_alternative_names        = optional(list(string))
       allocated_ip_range                      = optional(string)
       enable_private_path_for_google_services = optional(bool)
-
       authorized_networks = optional(list(object({
         name            = optional(string)
         value           = string
@@ -237,10 +226,6 @@ variable "settings" {
   default = null
 }
 
-#############################
-#  CLONE block
-#############################
-
 variable "clone" {
   type = object({
     source_instance_name         = string
@@ -254,10 +239,6 @@ variable "clone" {
   default = null
 }
 
-#############################
-# Backup restore context
-#############################
-
 variable "restore_backup_context" {
   type = object({
     backup_run_id = number
@@ -266,10 +247,6 @@ variable "restore_backup_context" {
   })
   default = null
 }
-
-#############################
-# Point-in-time restore
-#############################
 
 variable "point_in_time_restore_context" {
   type = object({
@@ -284,10 +261,6 @@ variable "point_in_time_restore_context" {
   })
   default = null
 }
-
-#############################
-# Replica configuration
-#############################
 
 variable "replica_configuration" {
   type = object({
