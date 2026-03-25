@@ -1,11 +1,13 @@
 resource "google_sql_database_instance" "main" {
   name                = var.name
-  project             = var.project
+project             = coalesce(var.project, data.google_project.project.project_id)
   database_version    = var.database_version
   region              = var.region
   deletion_protection = var.deletion_protection
 
-  settings {
+  dynamic "settings" {
+    for_each = google_sql_database_instance.main
+    content { 
     tier                            = var.tier
     edition                         = try(var.settings.edition, null)
     user_labels                     = try(var.settings.user_labels, {})
@@ -20,7 +22,7 @@ resource "google_sql_database_instance" "main" {
     pricing_plan                    = try(var.settings.pricing_plan, null)
     time_zone                       = try(var.settings.time_zone, null)
     retain_backups_on_delete        = try(var.settings.retain_backups_on_delete, null)
-
+    
     dynamic "ip_configuration" {
       for_each = length(var.authorized_networks) > 0 ? [true] : []
       content {
@@ -43,7 +45,7 @@ resource "google_sql_database_instance" "main" {
         point_in_time_recovery_enabled = var.backup_configuration_point_in_time_recovery_enabled
         start_time                     = var.backup_configuration_start_time
       }
-    }
+    } 
 
     dynamic "database_flags" {
       for_each = var.database_flags
@@ -69,28 +71,12 @@ resource "google_sql_database_instance" "main" {
         update_track = maintenance_window.value.update_track
       }
     }
+    }
   }
 
   lifecycle {
-    ignore_changes = [settings]
+    ignore_changes = [settings, settings.maintenance_window]
   }
 }
 
-resource "google_sql_database" "main" {
-  count  = var.database_name != "" ? 1 : 0
-  name   = var.database_name
-  project  = var.project
-  instance = google_sql_database_instance.main.name
 
-  depends_on = [google_sql_database_instance.main]
-}
-
-resource "google_sql_user" "main" {
-  count    = var.user_name != "" && var.user_password != "" ? 1 : 0
-  name     = var.user_name
-  instance = google_sql_database_instance.main.name
-  project  = var.project
-  password = var.user_password
-
-  depends_on = [google_sql_database_instance.main]
-}
