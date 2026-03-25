@@ -7,19 +7,19 @@ resource "google_sql_database_instance" "main" {
 
   settings {
     tier                            = var.tier
-    edition                         = var.settings.edition
-    user_labels                     = var.settings.user_labels
-    activation_policy               = var.settings.activation_policy
+    edition                         = try(var.settings.edition, null)
+    user_labels                     = try(var.settings.user_labels, {})
+    activation_policy               = try(var.settings.activation_policy, null)
     availability_type               = var.availability_type
-    collation                       = var.settings.collation
-    connector_enforcement           = var.settings.connector_enforcement
+    collation                       = try(var.settings.collation, null)
+    connector_enforcement           = try(var.settings.connector_enforcement, null)
     disk_autoresize                 = var.disk_autoresize
-    disk_autoresize_limit           = var.settings.disk_autoresize_limit
+    disk_autoresize_limit           = try(var.settings.disk_autoresize_limit, null)
     disk_size                       = var.disk_size
     disk_type                       = var.disk_type
-    pricing_plan                    = var.settings.pricing_plan
-    time_zone                       = var.settings.time_zone
-    retain_backups_on_delete        = var.settings.retain_backups_on_delete
+    pricing_plan                    = try(var.settings.pricing_plan, null)
+    time_zone                       = try(var.settings.time_zone, null)
+    retain_backups_on_delete        = try(var.settings.retain_backups_on_delete, null)
 
     dynamic "ip_configuration" {
       for_each = length(var.authorized_networks) > 0 ? [true] : []
