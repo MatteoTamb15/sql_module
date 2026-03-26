@@ -5,5 +5,5 @@ resource "google_sql_user" "sql_user" {
   project  = var.project
   password = var.user_password
 
-  depends_on = [google_sql_database_instance.main]
+  depends_on = [google_sql_database_instance.sql_database_instance]
 }

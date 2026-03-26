@@ -4,5 +4,5 @@ resource "google_sql_database" "masql_database" {
   project  = var.project
   instance = google_sql_database_instance.main.name
 
-  depends_on = [google_sql_database_instance.main]
+  depends_on = [google_sql_database_instance.sql_database_instance]
 }
