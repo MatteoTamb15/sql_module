@@ -1,5 +1,6 @@
 resource "google_sql_user" "sql_user" {
   count    = var.user_name != "" && var.user_password != "" ? 1 : 0
+  
   name     = var.user_name
   instance = google_sql_database_instance.sql_database_instance.name
   project  = var.project

@@ -6,17 +6,15 @@ resource "google_sql_database_instance" "sql_database_instance" {
   deletion_protection = var.deletion_protection
 
   dynamic "settings" {
-    for_each = var.settings != null ? [var.settings] : []
+    for_each = var.settings == null ? [] : [var.settings]
     content {
       tier        = settings.value.tier
       edition     = try(settings.value.edition, null)
       user_labels = try(settings.value.user_labels, {})
-      # auto_upgrade_enabled            = try(settings.value.auto_upgrade_enabled, null)
       activation_policy     = try(settings.value.activation_policy, null)
       availability_type     = try(settings.value.availability_type, var.availability_type)
       collation             = try(settings.value.collation, null)
       connector_enforcement = try(settings.value.connector_enforcement, null)
-      # data_api_access                 = try(settings.value.data_api_access, null)
       deletion_protection_enabled  = try(settings.value.deletion_protection_enabled, null)
       enable_google_ml_integration = try(settings.value.enable_google_ml_integration, null)
       enable_dataplex_integration  = try(settings.value.enable_dataplex_integration, null)
@@ -24,20 +22,9 @@ resource "google_sql_database_instance" "sql_database_instance" {
       disk_autoresize_limit        = try(settings.value.disk_autoresize_limit, null)
       disk_size                    = try(settings.value.disk_size, var.disk_size)
       disk_type                    = try(settings.value.disk_type, var.disk_type)
-      # data_disk_provisioned_iops      = try(settings.value.data_disk_provisioned_iops, null)
-      # data_disk_provisioned_throughput = try(settings.value.data_disk_provisioned_throughput, null)
-      # node_count                      = try(settings.value.node_count, null)
       pricing_plan             = try(settings.value.pricing_plan, null)
       time_zone                = try(settings.value.time_zone, null)
       retain_backups_on_delete = try(settings.value.retain_backups_on_delete, null)
-
-      # dynamic "final_backup_config" {
-      # for_each = try(settings.value.final_backup_config, null) != null ? [settings.value.final_backup_config] : []
-      # content {
-      # enabled        = final_backup_config.value.enabled
-      # retention_days = final_backup_config.value.retention_days
-      # }
-      # }
 
       dynamic "advanced_machine_features" {
         for_each = try(settings.value.advanced_machine_features, null) != null ? [settings.value.advanced_machine_features] : []
@@ -101,16 +88,8 @@ resource "google_sql_database_instance" "sql_database_instance" {
     for_each = var.clone != null ? [var.clone] : []
     content {
       source_instance_name = clone.value.source_instance_name
-      # source_project       = try(clone.value.source_project, null)
-      # bin_log_position     = try(clone.value.bin_log_position, null)
     }
   }
-
-  # restore_backup support:
-  # dynamic "restore_backup" { ... } - CNon supportato dal Terraform provider
-
-  # point_in_time_restore_context support:
-  # dynamic "time_restore" { ... } - Non supportato dal Terraform provider
 
   dynamic "replica_configuration" {
     for_each = var.replica_configuration != null ? [var.replica_configuration] : []

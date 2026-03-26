@@ -1,7 +1,6 @@
 variable "name" {
   description = "Nome del Cloud SQL instance. Se null, Terraform genera un nome randomico."
   type        = string
-  default     = null
 }
 
 variable "project" {
@@ -105,17 +104,14 @@ variable "database_flags" {
 }
 
 variable "settings" {
-  description = "impostazioni per Cloud SQL instance."
   type = object({
     tier                             = string
     edition                          = optional(string)
     user_labels                      = optional(map(string))
-    auto_upgrade_enabled             = optional(bool)
     activation_policy                = optional(string)
     availability_type                = optional(string)
     collation                        = optional(string)
     connector_enforcement            = optional(string)
-    data_api_access                  = optional(string)
     deletion_protection_enabled      = optional(bool)
     enable_google_ml_integration     = optional(bool)
     enable_dataplex_integration      = optional(bool)
@@ -129,10 +125,6 @@ variable "settings" {
     pricing_plan                     = optional(string)
     time_zone                        = optional(string)
     retain_backups_on_delete         = optional(bool)
-    final_backup_config = optional(object({
-      enabled        = optional(bool)
-      retention_days = optional(number)
-    }))
 
     advanced_machine_features = optional(object({
       threads_per_core = optional(number)
@@ -142,22 +134,27 @@ variable "settings" {
       name  = string
       value = string
     })))
+
     active_directory_config = optional(object({
       domain = string
     }))
+
     data_cache_config = optional(object({
       data_cache_enabled = optional(bool)
     }))
+
     deny_maintenance_period = optional(list(object({
       start_date = string
       end_date   = string
       time       = string
     })))
+
     sql_server_audit_config = optional(object({
       bucket             = optional(string)
       upload_interval    = optional(string)
       retention_interval = optional(string)
     }))
+
     backup_configuration = optional(object({
       binary_log_enabled             = optional(bool)
       enabled                        = optional(bool)
@@ -171,6 +168,7 @@ variable "settings" {
         retention_unit   = optional(string)
       }))
     }))
+
     ip_configuration = optional(object({
       ipv4_enabled                            = optional(bool)
       private_network                         = optional(string)
@@ -180,6 +178,7 @@ variable "settings" {
       custom_subject_alternative_names        = optional(list(string))
       allocated_ip_range                      = optional(string)
       enable_private_path_for_google_services = optional(bool)
+
       authorized_networks = optional(list(object({
         name            = optional(string)
         value           = string
@@ -190,6 +189,12 @@ variable "settings" {
         psc_enabled               = optional(bool)
         allowed_consumer_projects = optional(list(string))
       })))
+    }))
+
+    psc_auto_connections = optional(object({
+      consumer_network           = string
+      network_attachment_uri     = optional(string)
+      consumer_service_project_id = optional(string)
     }))
 
     location_preference = optional(object({
@@ -205,12 +210,11 @@ variable "settings" {
     }))
 
     insights_config = optional(object({
-      query_insights_enabled          = optional(bool)
-      enhanced_query_insights_enabled = optional(bool)
-      query_string_length             = optional(number)
-      record_application_tags         = optional(bool)
-      record_client_address           = optional(bool)
-      query_plans_per_minute          = optional(number)
+      query_insights_enabled  = optional(bool)
+      query_string_length     = optional(number)
+      record_application_tags = optional(bool)
+      record_client_address   = optional(bool)
+      query_plans_per_minute  = optional(number)
     }))
 
     password_validation_policy = optional(object({
@@ -221,20 +225,24 @@ variable "settings" {
       password_change_interval    = optional(number)
       enable_password_policy      = optional(bool)
     }))
-  })
 
-  default = null
+    connection_pool_config = optional(object({
+      connection_pooling_enabled = optional(bool)
+      flags = optional(list(object({
+        name  = string
+        value = string
+      })))
+    }))
+  })
 }
 
 variable "clone" {
   type = object({
-    source_instance_name          = string
-    source_project                = optional(string)
-    point_in_time                 = optional(string)
-    preferred_zone                = optional(string)
-    database_names                = optional(list(string))
-    allocated_ip_range            = optional(string)
-    source_instance_deletion_time = optional(string)
+    source_instance_name = string
+    point_in_time        = optional(string)
+    preferred_zone       = optional(string)
+    database_names       = optional(list(string))
+    allocated_ip_range   = optional(string)
   })
   default = null
 }
@@ -244,20 +252,6 @@ variable "restore_backup_context" {
     backup_run_id = number
     instance_id   = optional(string)
     project       = optional(string)
-  })
-  default = null
-}
-
-variable "point_in_time_restore_context" {
-  type = object({
-    datasource                    = string
-    point_in_time                 = string
-    target_instance               = string
-    private_network               = optional(string)
-    preferred_zone                = optional(string)
-    allocated_ip_range            = optional(string)
-    source_instance_deletion_time = optional(string)
-    database_names                = optional(list(string))
   })
   default = null
 }
@@ -276,6 +270,15 @@ variable "replica_configuration" {
     ssl_cipher                = optional(string)
     username                  = optional(string)
     verify_server_certificate = optional(bool)
+  })
+  default = null
+}
+
+variable "replication_cluster" {
+  type = object({
+    psa_write_endpoint         = optional(string)
+    failover_dr_replica_name   = optional(string)
+    dr_replica                 = optional(bool)
   })
   default = null
 }

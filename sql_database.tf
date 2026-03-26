@@ -1,4 +1,4 @@
-resource "google_sql_database" "masql_database" {
+resource "google_sql_database" "sql_database" {
   count    = var.database_name != "" ? 1 : 0
   name     = var.database_name
   project  = var.project
