@@ -1,4 +1,4 @@
-resource "google_sql_database_instance" "main" {
+resource "google_sql_database_instance" "sql_database_instance" {
   name                = var.name
 project             = coalesce(var.project, data.google_project.project.project_id)
   database_version    = var.database_version
@@ -6,7 +6,7 @@ project             = coalesce(var.project, data.google_project.project.project_
   deletion_protection = var.deletion_protection
 
   dynamic "settings" {
-    for_each = google_sql_database_instance.main
+    for_each = var.settings != null ? [var.settings] : []
     content { 
     tier                            = var.tier
     edition                         = try(var.settings.edition, null)
@@ -75,7 +75,7 @@ project             = coalesce(var.project, data.google_project.project.project_
   }
 
   lifecycle {
-    ignore_changes = [settings, settings.maintenance_window]
+    ignore_changes = [settings]
   }
 }
 
