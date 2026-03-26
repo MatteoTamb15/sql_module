@@ -107,10 +107,10 @@ resource "google_sql_database_instance" "sql_database_instance" {
   }
 
   # restore_backup support:
-  # dynamic "restore_backup" { ... } - Commented as block not supported in Terraform provider
+  # dynamic "restore_backup" { ... } - CNon supportato dal Terraform provider
 
   # point_in_time_restore_context support:
-  # dynamic "time_restore" { ... } - Not supported in Terraform provider
+  # dynamic "time_restore" { ... } - Non supportato dal Terraform provider
 
   dynamic "replica_configuration" {
     for_each = var.replica_configuration != null ? [var.replica_configuration] : []
