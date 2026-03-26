@@ -1,0 +1,131 @@
+resource "google_sql_database_instance" "sql_database_instance" {
+  name                = var.name
+  project             = var.project
+  database_version    = var.database_version
+  region              = var.region
+  deletion_protection = var.deletion_protection
+
+  dynamic "settings" {
+    for_each = var.settings != null ? [var.settings] : []
+    content {
+      tier        = settings.value.tier
+      edition     = try(settings.value.edition, null)
+      user_labels = try(settings.value.user_labels, {})
+      # auto_upgrade_enabled            = try(settings.value.auto_upgrade_enabled, null)
+      activation_policy     = try(settings.value.activation_policy, null)
+      availability_type     = try(settings.value.availability_type, var.availability_type)
+      collation             = try(settings.value.collation, null)
+      connector_enforcement = try(settings.value.connector_enforcement, null)
+      # data_api_access                 = try(settings.value.data_api_access, null)
+      deletion_protection_enabled  = try(settings.value.deletion_protection_enabled, null)
+      enable_google_ml_integration = try(settings.value.enable_google_ml_integration, null)
+      enable_dataplex_integration  = try(settings.value.enable_dataplex_integration, null)
+      disk_autoresize              = try(settings.value.disk_autoresize, var.disk_autoresize)
+      disk_autoresize_limit        = try(settings.value.disk_autoresize_limit, null)
+      disk_size                    = try(settings.value.disk_size, var.disk_size)
+      disk_type                    = try(settings.value.disk_type, var.disk_type)
+      # data_disk_provisioned_iops      = try(settings.value.data_disk_provisioned_iops, null)
+      # data_disk_provisioned_throughput = try(settings.value.data_disk_provisioned_throughput, null)
+      # node_count                      = try(settings.value.node_count, null)
+      pricing_plan             = try(settings.value.pricing_plan, null)
+      time_zone                = try(settings.value.time_zone, null)
+      retain_backups_on_delete = try(settings.value.retain_backups_on_delete, null)
+
+      # dynamic "final_backup_config" {
+      # for_each = try(settings.value.final_backup_config, null) != null ? [settings.value.final_backup_config] : []
+      # content {
+      # enabled        = final_backup_config.value.enabled
+      # retention_days = final_backup_config.value.retention_days
+      # }
+      # }
+
+      dynamic "advanced_machine_features" {
+        for_each = try(settings.value.advanced_machine_features, null) != null ? [settings.value.advanced_machine_features] : []
+        content {
+          threads_per_core = advanced_machine_features.value.threads_per_core
+        }
+      }
+
+      dynamic "database_flags" {
+        for_each = var.database_flags
+        content {
+          name  = database_flags.value.name
+          value = database_flags.value.value
+        }
+      }
+
+      dynamic "ip_configuration" {
+        for_each = length(var.authorized_networks) > 0 ? [true] : []
+        content {
+          ipv4_enabled = true
+          dynamic "authorized_networks" {
+            for_each = var.authorized_networks
+            content {
+              name  = authorized_networks.value.name
+              value = authorized_networks.value.value
+            }
+          }
+        }
+      }
+
+      dynamic "backup_configuration" {
+        for_each = [var.backup_configuration_enabled]
+        content {
+          enabled                        = true
+          binary_log_enabled             = var.backup_configuration_binary_log_enabled
+          point_in_time_recovery_enabled = var.backup_configuration_point_in_time_recovery_enabled
+          start_time                     = var.backup_configuration_start_time
+        }
+      }
+
+      dynamic "location_preference" {
+        for_each = try(settings.value.location_preference, null) != null ? [settings.value.location_preference] : []
+        content {
+          zone           = location_preference.value.zone
+          secondary_zone = location_preference.value.secondary_zone
+        }
+      }
+
+      dynamic "maintenance_window" {
+        for_each = try(settings.value.maintenance_window, null) != null ? [settings.value.maintenance_window] : []
+        content {
+          day          = maintenance_window.value.day
+          hour         = maintenance_window.value.hour
+          update_track = maintenance_window.value.update_track
+        }
+      }
+    }
+  }
+
+  dynamic "clone" {
+    for_each = var.clone != null ? [var.clone] : []
+    content {
+      source_instance_name = clone.value.source_instance_name
+      # source_project       = try(clone.value.source_project, null)
+      # bin_log_position     = try(clone.value.bin_log_position, null)
+    }
+  }
+
+  # restore_backup support:
+  # dynamic "restore_backup" { ... } - Commented as block not supported in Terraform provider
+
+  # point_in_time_restore_context support:
+  # dynamic "time_restore" { ... } - Not supported in Terraform provider
+
+  dynamic "replica_configuration" {
+    for_each = var.replica_configuration != null ? [var.replica_configuration] : []
+    content {
+      failover_target           = try(replica_configuration.value.failover_target, null)
+      connect_retry_interval    = try(replica_configuration.value.connect_retry_interval, null)
+      dump_file_path            = try(replica_configuration.value.dump_file_path, null)
+      master_heartbeat_period   = try(replica_configuration.value.master_heartbeat_period, null)
+      ssl_cipher                = try(replica_configuration.value.ssl_cipher, null)
+      username                  = try(replica_configuration.value.username, null)
+      verify_server_certificate = try(replica_configuration.value.verify_server_certificate, null)
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [settings]
+  }
+}

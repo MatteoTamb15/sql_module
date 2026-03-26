@@ -107,31 +107,31 @@ variable "database_flags" {
 variable "settings" {
   description = "impostazioni per Cloud SQL instance."
   type = object({
-    tier                            = string
-    edition                         = optional(string)
-    user_labels                     = optional(map(string))
-    auto_upgrade_enabled            = optional(bool)
-    activation_policy               = optional(string)
-    availability_type               = optional(string)
-    collation                       = optional(string)
-    connector_enforcement           = optional(string)
-    data_api_access                 = optional(string)
-    deletion_protection_enabled     = optional(bool)
-    enable_google_ml_integration    = optional(bool)
-    enable_dataplex_integration     = optional(bool)
-    disk_autoresize                 = optional(bool)
-    disk_autoresize_limit           = optional(number)
-    disk_size                       = optional(number)
-    disk_type                       = optional(string)
-    data_disk_provisioned_iops      = optional(number)
-    data_disk_provisioned_throughput= optional(number)
-    node_count                      = optional(number)
-    pricing_plan                    = optional(string)
-    time_zone                       = optional(string)
-    retain_backups_on_delete        = optional(bool)
+    tier                             = string
+    edition                          = optional(string)
+    user_labels                      = optional(map(string))
+    auto_upgrade_enabled             = optional(bool)
+    activation_policy                = optional(string)
+    availability_type                = optional(string)
+    collation                        = optional(string)
+    connector_enforcement            = optional(string)
+    data_api_access                  = optional(string)
+    deletion_protection_enabled      = optional(bool)
+    enable_google_ml_integration     = optional(bool)
+    enable_dataplex_integration      = optional(bool)
+    disk_autoresize                  = optional(bool)
+    disk_autoresize_limit            = optional(number)
+    disk_size                        = optional(number)
+    disk_type                        = optional(string)
+    data_disk_provisioned_iops       = optional(number)
+    data_disk_provisioned_throughput = optional(number)
+    node_count                       = optional(number)
+    pricing_plan                     = optional(string)
+    time_zone                        = optional(string)
+    retain_backups_on_delete         = optional(bool)
     final_backup_config = optional(object({
-      enabled         = optional(bool)
-      retention_days  = optional(number)
+      enabled        = optional(bool)
+      retention_days = optional(number)
     }))
 
     advanced_machine_features = optional(object({
@@ -159,12 +159,12 @@ variable "settings" {
       retention_interval = optional(string)
     }))
     backup_configuration = optional(object({
-      binary_log_enabled               = optional(bool)
-      enabled                          = optional(bool)
-      start_time                       = optional(string)
-      point_in_time_recovery_enabled  = optional(bool)
-      location                         = optional(string)
-      transaction_log_retention_days   = optional(number)
+      binary_log_enabled             = optional(bool)
+      enabled                        = optional(bool)
+      start_time                     = optional(string)
+      point_in_time_recovery_enabled = optional(bool)
+      location                       = optional(string)
+      transaction_log_retention_days = optional(number)
 
       backup_retention_settings = optional(object({
         retained_backups = optional(number)
@@ -172,8 +172,8 @@ variable "settings" {
       }))
     }))
     ip_configuration = optional(object({
-      ipv4_enabled                           = optional(bool)
-      private_network                        = optional(string)
+      ipv4_enabled                            = optional(bool)
+      private_network                         = optional(string)
       ssl_mode                                = optional(string)
       server_ca_mode                          = optional(string)
       server_ca_pool                          = optional(string)
@@ -205,21 +205,21 @@ variable "settings" {
     }))
 
     insights_config = optional(object({
-      query_insights_enabled            = optional(bool)
-      enhanced_query_insights_enabled   = optional(bool)
-      query_string_length               = optional(number)
-      record_application_tags           = optional(bool)
-      record_client_address             = optional(bool)
-      query_plans_per_minute            = optional(number)
+      query_insights_enabled          = optional(bool)
+      enhanced_query_insights_enabled = optional(bool)
+      query_string_length             = optional(number)
+      record_application_tags         = optional(bool)
+      record_client_address           = optional(bool)
+      query_plans_per_minute          = optional(number)
     }))
 
     password_validation_policy = optional(object({
-      min_length                   = optional(number)
-      complexity                   = optional(string)
-      reuse_interval               = optional(number)
-      disallow_username_substring  = optional(bool)
-      password_change_interval     = optional(number)
-      enable_password_policy       = optional(bool)
+      min_length                  = optional(number)
+      complexity                  = optional(string)
+      reuse_interval              = optional(number)
+      disallow_username_substring = optional(bool)
+      password_change_interval    = optional(number)
+      enable_password_policy      = optional(bool)
     }))
   })
 
@@ -228,13 +228,13 @@ variable "settings" {
 
 variable "clone" {
   type = object({
-    source_instance_name         = string
-    source_project               = optional(string)
-    point_in_time                = optional(string)
-    preferred_zone               = optional(string)
-    database_names               = optional(list(string))
-    allocated_ip_range           = optional(string)
-    source_instance_deletion_time= optional(string)
+    source_instance_name          = string
+    source_project                = optional(string)
+    point_in_time                 = optional(string)
+    preferred_zone                = optional(string)
+    database_names                = optional(list(string))
+    allocated_ip_range            = optional(string)
+    source_instance_deletion_time = optional(string)
   })
   default = null
 }
@@ -250,31 +250,31 @@ variable "restore_backup_context" {
 
 variable "point_in_time_restore_context" {
   type = object({
-    datasource                   = string
-    point_in_time                = string
-    target_instance              = string
-    private_network              = optional(string)
-    preferred_zone               = optional(string)
-    allocated_ip_range           = optional(string)
-    source_instance_deletion_time= optional(string)
-    database_names               = optional(list(string))
+    datasource                    = string
+    point_in_time                 = string
+    target_instance               = string
+    private_network               = optional(string)
+    preferred_zone                = optional(string)
+    allocated_ip_range            = optional(string)
+    source_instance_deletion_time = optional(string)
+    database_names                = optional(list(string))
   })
   default = null
 }
 
 variable "replica_configuration" {
   type = object({
-    cascadable_replica     = optional(bool)
-    ca_certificate         = optional(string)
-    client_certificate     = optional(string)
-    client_key             = optional(string)
-    connect_retry_interval = optional(number)
-    dump_file_path         = optional(string)
-    failover_target        = optional(bool)
-    master_heartbeat_period= optional(number)
-    password               = optional(string)
-    ssl_cipher             = optional(string)
-    username               = optional(string)
+    cascadable_replica        = optional(bool)
+    ca_certificate            = optional(string)
+    client_certificate        = optional(string)
+    client_key                = optional(string)
+    connect_retry_interval    = optional(number)
+    dump_file_path            = optional(string)
+    failover_target           = optional(bool)
+    master_heartbeat_period   = optional(number)
+    password                  = optional(string)
+    ssl_cipher                = optional(string)
+    username                  = optional(string)
     verify_server_certificate = optional(bool)
   })
   default = null

@@ -1,6 +1,6 @@
 resource "google_sql_database" "masql_database" {
-  count  = var.database_name != "" ? 1 : 0
-  name   = var.database_name
+  count    = var.database_name != "" ? 1 : 0
+  name     = var.database_name
   project  = var.project
   instance = google_sql_database_instance.sql_database_instance.name
 
