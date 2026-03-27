@@ -1,3 +1,5 @@
+#Cloud sql outuputs
+
 output "self_link" {
   description = "URI completo della risorsa Cloud SQL."
   value       = google_sql_database_instance.sql_database_instance.self_link
@@ -95,4 +97,25 @@ output "server_ca_cert_info" {
       sha1_fingerprint = c.sha1_fingerprint
     }
   ]
+}
+
+
+#Sql database outputs
+
+output "sql_database_id" {
+  description = "Identifier for the resource with format: projects/{{project}}/instances/{{instance}}/databases/{{name}}"
+  value = try(google_sql_database.sql_database[0].id, null)
+}
+
+output "sql_database_self_link" {
+  description = "The URI of the created resource."
+  value = try(google_sql_database.sql_database[0].self_link, null)
+}
+
+
+#Sql user outputs
+
+output "sql_user_password_wo" {
+  description = "Password dello user"
+  value = try(google_sql_user.sql_user[0].password_wo, null)
 }

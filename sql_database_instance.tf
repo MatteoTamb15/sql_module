@@ -9,22 +9,22 @@ resource "google_sql_database_instance" "sql_database_instance" {
     for_each = var.settings == null ? [] : [var.settings]
     content {
       tier        = settings.value.tier
-      edition     = try(settings.value.edition, null)
-      user_labels = try(settings.value.user_labels, {})
-      activation_policy     = try(settings.value.activation_policy, null)
+      edition     = settings.value.edition
+      user_labels = settings.value.user_labels
+      activation_policy     = settings.value.activation_policy
       availability_type     = try(settings.value.availability_type, var.availability_type)
-      collation             = try(settings.value.collation, null)
-      connector_enforcement = try(settings.value.connector_enforcement, null)
-      deletion_protection_enabled  = try(settings.value.deletion_protection_enabled, null)
-      enable_google_ml_integration = try(settings.value.enable_google_ml_integration, null)
-      enable_dataplex_integration  = try(settings.value.enable_dataplex_integration, null)
+      collation             = settings.value.collation
+      connector_enforcement = settings.value.connector_enforcement
+      deletion_protection_enabled  = settings.value.deletion_protection_enabled
+      enable_google_ml_integration = settings.value.enable_google_ml_integration
+      enable_dataplex_integration  = settings.value.enable_dataplex_integration
       disk_autoresize              = try(settings.value.disk_autoresize, var.disk_autoresize)
-      disk_autoresize_limit        = try(settings.value.disk_autoresize_limit, null)
+      disk_autoresize_limit        = settings.value.disk_autoresize_limit
       disk_size                    = try(settings.value.disk_size, var.disk_size)
       disk_type                    = try(settings.value.disk_type, var.disk_type)
-      pricing_plan             = try(settings.value.pricing_plan, null)
-      time_zone                = try(settings.value.time_zone, null)
-      retain_backups_on_delete = try(settings.value.retain_backups_on_delete, null)
+      pricing_plan             = settings.value.pricing_plan
+      time_zone                = settings.value.time_zone
+      retain_backups_on_delete = settings.value.retain_backups_on_delete
 
       dynamic "advanced_machine_features" {
         for_each = try(settings.value.advanced_machine_features, null) != null ? [settings.value.advanced_machine_features] : []
