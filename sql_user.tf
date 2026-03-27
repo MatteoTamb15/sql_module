@@ -1,4 +1,6 @@
 resource "google_sql_user" "sql_user" {
+  provider = google.cloud_sql
+  
   count    = var.user_name != "" && var.user_password != "" ? 1 : 0
   
   name     = var.user_name

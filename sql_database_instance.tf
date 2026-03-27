@@ -1,4 +1,6 @@
 resource "google_sql_database_instance" "sql_database_instance" {
+  provider = google.cloud_sql
+  
   name                = var.name
   project             = var.project
   database_version    = var.database_version
